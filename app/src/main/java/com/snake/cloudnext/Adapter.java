@@ -53,7 +53,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
         Glide.with(mContext)
                 .load(data.getImage())
                 .apply(RequestOptions.circleCropTransform()
-                        .placeholder(R.drawable.ic_account_circle_black_24dp))
+                        .placeholder(R.drawable.ic_account_circle_grey_24dp))
                 .into(holder.imageView);
     }
 

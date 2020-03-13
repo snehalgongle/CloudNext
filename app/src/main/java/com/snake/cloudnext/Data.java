@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Data {
+    @SerializedName("id")
+    @Expose
+    private int id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -19,13 +22,25 @@ public class Data {
     @SerializedName("image")
     @Expose
     private String image;
+    @SerializedName("experience")
+    @Expose
+    private String experience;
 
-    public Data(String name, String designation, String gender, String salary, String image) {
+    public Data(int id,String name, String designation, String gender, String salary) {
+        this.id=id;
         this.name = name;
         this.designation = designation;
         this.gender = gender;
         this.salary = salary;
-        this.image = image;
+    }
+
+    public Data(int id,String name, String designation, String gender, String salary,String experience) {
+        this.id=id;
+        this.name = name;
+        this.designation = designation;
+        this.gender = gender;
+        this.salary = salary;
+        this.experience=experience;
     }
 
     public String getName() {
@@ -66,5 +81,21 @@ public class Data {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
     }
 }
