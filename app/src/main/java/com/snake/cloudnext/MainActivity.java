@@ -157,9 +157,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteMultipleDetails() {
-        adapter.deleteMultiple();
-        dataList.clear();
-        readFromDB();
+        if(recyclerView.getVisibility()==View.VISIBLE) {
+            adapter.deleteMultiple();
+            dataList.clear();
+            readFromDB();
+        }
     }
 
     @Override
