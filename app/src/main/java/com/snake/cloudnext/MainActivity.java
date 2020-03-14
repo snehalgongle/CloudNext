@@ -15,6 +15,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray();
             do {
                 Log.d(this.getClass().getSimpleName(), "readFromDB: " + cursor.getColumnName(0) + cursor.getColumnName(2) + cursor.getColumnName(3) + cursor.getColumnName(4));
-//                writeIntoJsonFile(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
                 try {
                     String root = Environment.getExternalStorageDirectory().toString();
                     File myDir = new File(root + "/cloud_next");
@@ -114,29 +115,27 @@ public class MainActivity extends AppCompatActivity {
                     output.close();
                 } catch (Exception e) {
                     Log.d(this.getClass().getSimpleName(), "writeIntoJsonFile: " + e.getMessage());
+                    adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.GONE);
                     noDataImage.setVisibility(View.VISIBLE);
                 }
             } while (cursor.moveToNext());
+
+            readFromJsonFile();
         } else {
+            adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.GONE);
             noDataImage.setVisibility(View.VISIBLE);
         }
         cursor.close();
-        readFromJsonFile();
+        database.close();
     }
 
     private void readFromJsonFile() {
         try {
             String root = Environment.getExternalStorageDirectory().toString();
             File myDir = new File(root + "/cloud_next");
-            /*if (!myDir.exists()) {
-                myDir.mkdirs();
-            }*/
             File file = new File(myDir, "output.json");
-            /*if (file.exists ())
-                file.delete ();
-            OutputStream outputStream = new FileOutputStream(file);*/
             InputStream inputStream = new FileInputStream(file);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             JSONArray jArray = new JSONArray(bufferedReader.readLine());
@@ -151,11 +150,17 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             Log.d(this.getClass().getSimpleName(), "readFromJsonFile: " + e.getMessage());
+            adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.GONE);
             noDataImage.setVisibility(View.VISIBLE);
         }
     }
 
+    private void deleteMultipleDetails() {
+        adapter.deleteMultiple();
+        dataList.clear();
+        readFromDB();
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -167,4 +172,29 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.deleteAll) {
+            deleteMultipleDetails();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

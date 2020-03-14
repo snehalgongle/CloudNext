@@ -66,8 +66,6 @@ public class SecoundActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                writeIntoJsonFile();
-//                saveDataIntoDb();
                 checkEmptyValues();
             }
         });
@@ -103,9 +101,12 @@ public class SecoundActivity extends AppCompatActivity {
         values.put(SQLiteDBHelper.COLUMN_DES, designation);
         database.insert(SQLiteDBHelper.TABLE_NAME, null, values);
 
+        database.close();
+
         Toast.makeText(mContext, "Data Saved ", Toast.LENGTH_LONG).show();
 
         startActivity(new Intent(this,MainActivity.class));
+        finish();
 
     }
 
